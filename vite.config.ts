@@ -6,8 +6,19 @@
 // You can pass additional config via defineConfig({ vite: { ... } }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
+const isNetlify = Boolean(process.env.NETLIFY);
+
 export default defineConfig({
   nitro: {
-    preset: "vercel",
+    preset: isNetlify ? "netlify" : "vercel",
+    ...(isNetlify
+      ? {
+          output: {
+            dir: ".netlify/functions-internal",
+            serverDir: ".netlify/functions-internal/server",
+            publicDir: "dist/client",
+          },
+        }
+      : {}),
   },
 });
